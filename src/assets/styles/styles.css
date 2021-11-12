@@ -1,8 +1,7 @@
 * {
   font-family: sans-serif;
   padding: 0px 0px ;
-  margin: 0px 0px ;
-  
+  margin: 0px 0px ;  
 }
 
 .wrapper {
@@ -10,10 +9,7 @@
   margin: 0px 0px;
   text-align: center;
 }
-.events {
-  text-align: left;
-  height: 70px;
-}
+
 .network {
   height: 400px;
   border: 1px solid #ccc;

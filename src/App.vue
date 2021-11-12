@@ -1,82 +1,101 @@
 <template>
-  <div class="wrapper app">
-    <v-row>
-      <v-col xs="12" md="6" style="">
-        <v-text-field
-          style=""
-          ref="caja"
-          filled
-          label="Texto de Entrada"
-          placeholder="Ingresar texto"
-          v-model="input"
-        >
-        </v-text-field>
-      </v-col>
-      <v-col xs="12" md="6">
-        <v-select
-          :items="velocidades"
-          label="Velocidad de animación"
-          :value="velocidades[3]"
-          filled
-        ></v-select>
-      </v-col>
-    </v-row>
-    <v-row>
-      <v-col>
-        <v-btn block dark @click="validateRoutes()">
-          Iniciar recorrido
-        </v-btn>
-      </v-col>
-    </v-row>
-    <network
-      class="network"
-      ref="network"
-      :nodes="network.nodes"
-      :edges="network.edges"
-      :options="network.options"
-      @click="networkEvent('click')"
-      @double-click="networkEvent('doubleClick')"
-      @oncontext="networkEvent('oncontext')"
-      @hold="networkEvent('hold')"
-      @release="networkEvent('release')"
-      @select="networkEvent('select')"
-      @select-node="networkEvent('selectNode')"
-      @select-edge="networkEvent('selectEdge')"
-      @deselect-node="networkEvent('deselectNode')"
-      @deselect-edge="networkEvent('deselectEdge')"
-      @drag-start="networkEvent('dragStart')"
-      @dragging="networkEvent('dragging')"
-      @drag-end="networkEvent('dragEnd')"
-      @hover-node="networkEvent('hoverNode')"
-      @blur-node="networkEvent('blurNode')"
-      @hover-edge="networkEvent('hoverEdge')"
-      @blur-edge="networkEvent('blurEdge')"
-      @zoom="networkEvent('zoom')"
-      @show-popup="networkEvent('showPopup')"
-      @hide-popup="networkEvent('hidePopup')"
-      @start-stabilizing="networkEvent('startStabilizing')"
-      @stabilization-progress="networkEvent('stabilizationProgress')"
-      @stabilization-iterations-done="
-        networkEvent('stabilizationIterationsDone')
-      "
-      @stabilized="networkEvent('stabilized')"
-      @resize="networkEvent('resize')"
-      @init-redraw="networkEvent('initRedraw')"
-      @before-drawing="networkEvent('beforeDrawing')"
-      @after-drawing="networkEvent('afterDrawing')"
-      @animation-finished="networkEvent('animationFinished')"
-      @config-change="networkEvent('configChange')"
-      @nodes-mounted="networkEvent('nodes-mounted')"
-      @nodes-add="networkEvent('nodes-add')"
-      @nodes-update="networkEvent('nodes-update')"
-      @nodes-remove="networkEvent('nodes-remove')"
-      @edges-mounted="networkEvent('edges-mounted')"
-      @edges-add="networkEvent('edges-add')"
-      @edges-update="networkEvent('edges-update')"
-      @edges-remove="networkEvent('edges-remove')"
-    >
-    </network>
-  </div>
+  <v-app class="mt-n15" >
+    <v-container fluid class="mt-10">
+      <v-row>
+        <v-col cols="12">
+          <v-app-bar app dark color="primary">
+            <v-app-bar-title>
+              <div class="text-h5">Automata Finito</div>
+            </v-app-bar-title>
+          </v-app-bar>
+        </v-col>
+      </v-row>
+      <v-row>
+        <v-col cols="12" sm="12">
+          <v-text-field
+            filled
+            label="Texto de Entrada"
+            placeholder="Ingresar texto"
+            v-model="input"
+            :readonly="disabled"
+          >
+          </v-text-field>
+        </v-col>
+      </v-row>
+      <v-row class="mt-n5">
+        <v-col cols="12" sm="6">
+          <v-slider
+            v-model="velocidad"
+            :disabled="disabled"
+            min="1"
+            max="5"
+            thumb-label
+            :label="'Animación x' + velocidad"
+          ></v-slider>
+        </v-col>
+        <v-col cols="12" sm="6">
+          <v-btn
+            :disabled="disabled"
+            block
+            color="primary"
+            href="#network"
+            @click="validateRoutes()"
+          >
+            Iniciar recorrido
+          </v-btn>
+        </v-col>
+      </v-row>
+      <network
+        id="network"
+        class="network"
+        ref="network"
+        :nodes="network.nodes"
+        :edges="network.edges"
+        :options="network.options"
+        @click="networkEvent('click')"
+        @double-click="networkEvent('doubleClick')"
+        @oncontext="networkEvent('oncontext')"
+        @hold="networkEvent('hold')"
+        @release="networkEvent('release')"
+        @select="networkEvent('select')"
+        @select-node="networkEvent('selectNode')"
+        @select-edge="networkEvent('selectEdge')"
+        @deselect-node="networkEvent('deselectNode')"
+        @deselect-edge="networkEvent('deselectEdge')"
+        @drag-start="networkEvent('dragStart')"
+        @dragging="networkEvent('dragging')"
+        @drag-end="networkEvent('dragEnd')"
+        @hover-node="networkEvent('hoverNode')"
+        @blur-node="networkEvent('blurNode')"
+        @hover-edge="networkEvent('hoverEdge')"
+        @blur-edge="networkEvent('blurEdge')"
+        @zoom="networkEvent('zoom')"
+        @show-popup="networkEvent('showPopup')"
+        @hide-popup="networkEvent('hidePopup')"
+        @start-stabilizing="networkEvent('startStabilizing')"
+        @stabilization-progress="networkEvent('stabilizationProgress')"
+        @stabilization-iterations-done="
+          networkEvent('stabilizationIterationsDone')
+        "
+        @stabilized="networkEvent('stabilized')"
+        @resize="networkEvent('resize')"
+        @init-redraw="networkEvent('initRedraw')"
+        @before-drawing="networkEvent('beforeDrawing')"
+        @after-drawing="networkEvent('afterDrawing')"
+        @animation-finished="networkEvent('animationFinished')"
+        @config-change="networkEvent('configChange')"
+        @nodes-mounted="networkEvent('nodes-mounted')"
+        @nodes-add="networkEvent('nodes-add')"
+        @nodes-update="networkEvent('nodes-update')"
+        @nodes-remove="networkEvent('nodes-remove')"
+        @edges-mounted="networkEvent('edges-mounted')"
+        @edges-add="networkEvent('edges-add')"
+        @edges-update="networkEvent('edges-update')"
+        @edges-remove="networkEvent('edges-remove')"
+      >
+      </network>
+    </v-container>
+  </v-app>
 </template>
 
 <script>
@@ -84,8 +103,8 @@ import { Network } from "vue-visjs";
 const Swal = require("sweetalert2");
 export default {
   data: () => ({
+    disabled: false,
     networkEvents: "",
-    velocidades: ["x0.25", "x0.5", "x0.75", "x1", "x2", "x3"],
     input: "",
     array_recorrido: [],
     manage_err: {
@@ -132,12 +151,8 @@ export default {
   components: {
     Network,
   },
-  watch: {
-    // input() {
-    //   console.log(this.rules.vacio[0](this.input));
-    // },
-  },
   created() {
+    this.$vuetify.theme.light = '#ffff'
     Swal.fire(
       "¿Que pasa si..?",
       "¿Quieres representar vacio 'λ' (Lambda)? .. Puedes escribir '?' para hacerlo. Recuerda que esto pueda ser un palabra valida para el automata.",
@@ -146,27 +161,7 @@ export default {
   },
   computed: {
     speed() {
-      let velocidad = 1000 * 1;
-      switch (this.velocidades) {
-        case "x0.25":
-          velocidad = 1000 * 0.25;
-          break;
-        case "x0.5":
-          velocidad = 1000 * 0.5;
-          break;
-        case "x0.75":
-          velocidad = 1000 * 0.75;
-          break;
-        case "x1":
-          velocidad = 1000;
-          break;
-        case "x2":
-          velocidad = 1000 * 2;
-          break;
-        case "x3":
-          velocidad = 1000 * 3;
-          break;
-      }
+      let velocidad = 2000 / this.velocidad;
       return velocidad;
     },
     validar_entrada() {
@@ -202,10 +197,25 @@ export default {
         }
       }
     },
+    beggin() {
+      Swal.fire({
+        title: "Atención!",
+        html: "No podra cambiar los valores. EL recorrido está por comenzar.",
+        timer: 2700,
+        timerProgressBar: true,
+        didOpen: () => {
+          Swal.showLoading();
+        },
+        willClose: () => {
+          clearInterval(2000);
+          this.set_focus(this.focus);
+        },
+      });
+    },
     validateRoutes() {
       if (this.rules.stringEmtpy[0](this.input)) {
         if (this.rules.expresionValida[0](this.input)) {
-          this.set_focus(this.focus);
+          this.beggin();
         } else {
           Swal.fire({
             icon: "warning",
@@ -221,7 +231,7 @@ export default {
             cancelButtonColor: "#d33",
           }).then((res) => {
             if (res.isConfirmed) {
-              this.set_focus(this.focus);
+              this.beggin();
             }
           });
         }
@@ -230,6 +240,7 @@ export default {
       }
     },
     async set_focus() {
+      this.disabled = true;
       this.manage_err.not_found_edge = "";
 
       await this.routes(this.network.nodes[0], 0);
@@ -256,8 +267,6 @@ export default {
             if (res.isConfirmed == true || res.isDismissed == true) {
               if (focus.length - 1 != this.input.length) {
                 if (this.input != "?") {
-                  console.log(this.input);
-                  console.log(focus.length);
                   Swal.fire({
                     icon: "error",
                     title: "Atención!!",
@@ -265,8 +274,6 @@ export default {
                       "No se encontro un camino '" +
                       this.input[focus.length - 1] +
                       "' para avanzar a otro nodo.",
-                    
-                    
                   });
                 }
               }
@@ -275,20 +282,7 @@ export default {
         );
       }
 
-      // switch (this.network.nodes[focus[focus.length - 1]].color) {
-      //   case "red":
-      //   case "green":
-
-      //     break;
-      //   default:
-      //     Swal.fire(
-      //       "Palabra invalida para el automata!",
-      //       "",
-      //       "warning"
-      //     );
-      //     break;
-      // }
-
+      this.disabled = false;
       this.array_recorrido = [];
     },
   },

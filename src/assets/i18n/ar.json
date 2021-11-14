@@ -1,0 +1,10 @@
+{
+    "screen": {
+        "toolbarTitle": "Automata Finito",
+        "labels": "Texto de entrada | Expresión Regular | Animación  ",
+        "placehoder": "Ingresar texto",
+        "botton": "Iniciar Recorrido",
+        "RExp": "^((aaa)*(aab)*b*)*$"
+    }   
+      
+}

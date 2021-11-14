@@ -10,11 +10,14 @@
     "start": "node server.js"
   },
   "dependencies": {
+    "axios": "^0.24.0",
     "core-js": "^3.6.5",
     "express": "^4.17.1",
     "serve-static": "^1.14.1",
     "vis-network": "^9.1.0",
     "vue": "^2.6.11",
+    "vue-i18n": "^8.26.7",
+    "vue-sweetalert2": "^5.0.2",
     "vue-visjs": "^0.6.0",
     "vuetify": "^2.4.0"
   },

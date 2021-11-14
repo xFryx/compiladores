@@ -1,0 +1,13 @@
+{
+    "screen": {
+        "toolbarTitle": "Automata Finito",
+        "labels": "Texto de entrada | Expresión Regular | Animación  ",
+        "placehoder": "Ingresar texto",
+        "botton": "Iniciar Recorrido",
+        "RExp": "^((aaa)*(aab)*b*)*$"
+    } ,
+    "alerts": {
+        "whatif": "¿Que pasa si..? | ¿Quieres representar vacio 'λ' (Lambda)?, Puedes escribir '?' para hacerlo, Recuerda que esto pueda ser una palabra valida para el automata.",
+        "start" :"Atención! | No podra cambiar los valores. EL recorrido está por comenzar."
+    }      
+}

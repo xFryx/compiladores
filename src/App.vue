@@ -1,51 +1,61 @@
 <template>
-  <v-app class="mt-n15" >
-    <v-container fluid class="mt-10">
+  <v-app>
+    <app-header></app-header>
+    <v-container fluid class="">
       <v-row>
-        <v-col cols="12">
-          <v-app-bar app dark color="primary">
-            <v-app-bar-title>
-              <div class="text-h5">Automata Finito</div>
-            </v-app-bar-title>
-          </v-app-bar>
-        </v-col>
-      </v-row>
-      <v-row>
-        <v-col cols="12" sm="12">
+        <v-col cols="12" sm="6">
+          <label for="textoEntrada">{{ $tc('screen.labels', 0)}}</label>
           <v-text-field
-            filled
-            label="Texto de Entrada"
-            placeholder="Ingresar texto"
-            v-model="input"
+            name="textoEntrada"
+            id="textoEntrada"
+            flat
+            solo-inverted
+            :placeholder="$t('screen.placehoder')"
+            v-model="textInput"
             :readonly="disabled"
           >
           </v-text-field>
         </v-col>
+        <v-col cols="12" sm="6">
+          <label for="expresionRegular">{{ $tc('screen.labels', 1)}}</label>
+          <v-text-field
+            name="expresionRegular"
+            id="expresionRegular"
+            flat
+            solo-inverted
+            readonly
+            :value="$t('screen.RExp')"
+          ></v-text-field>
+        </v-col>
       </v-row>
-      <v-row class="mt-n5">
+      <v-row>
         <v-col cols="12" sm="6">
           <v-slider
+            tick-size="5"
+            ticks="always"
+            :tick-labels="tickLabels"
             v-model="velocidad"
             :disabled="disabled"
             min="1"
             max="5"
-            thumb-label
-            :label="'Animación x' + velocidad"
+            :label="$tc('screen.labels', 2)"
           ></v-slider>
         </v-col>
         <v-col cols="12" sm="6">
           <v-btn
             :disabled="disabled"
             block
-            color="primary"
+            color="blue darken-4"
+            elevation="0"
+            dark
             href="#network"
             @click="validateRoutes()"
           >
-            Iniciar recorrido
+            {{$t('screen.botton')}}
           </v-btn>
         </v-col>
       </v-row>
-      <network
+      <app-network
         id="network"
         class="network"
         ref="network"
@@ -93,26 +103,39 @@
         @edges-update="networkEvent('edges-update')"
         @edges-remove="networkEvent('edges-remove')"
       >
-      </network>
+      </app-network>
     </v-container>
   </v-app>
 </template>
 
 <script>
+
+import Header from "./components/Header.vue";
 import { Network } from "vue-visjs";
 const Swal = require("sweetalert2");
+
 export default {
+  components: {
+    "app-header": Header,
+    "app-network": Network,
+  },
   data: () => ({
+    //Frontend
     disabled: false,
-    networkEvents: "",
-    input: "",
-    array_recorrido: [],
+    tickLabels: ["x1", "x2", "x3", "x4", "x5"],
+
+    textInput: "",
+
+    //Makes routes
+    routesArray: [],
+
+    //Handle Error
     manage_err: {
       not_found_edge: false,
       not_accepted_state: false,
     },
-    focus: 1,
-    velocidad: 1,
+
+    //Rules for automata and RExp
     rules: {
       stringEmtpy: [(v) => !!v || false],
       expresion: [(v) => /(^((\w)+)$) | (^(\?)$)/.test(v) || false],
@@ -122,6 +145,11 @@ export default {
       tabulaciones: [(v) => v.includes(" ")],
       vacio: [(v) => /^\?$/.test(v) || false],
     },
+
+    //data network
+    focus: 1,
+    velocidad: 1,
+    networkEvents: "",
     network: {
       nodes: [
         { id: 0, label: "q0", color: "green" },
@@ -148,14 +176,11 @@ export default {
       },
     },
   }),
-  components: {
-    Network,
-  },
   created() {
-    this.$vuetify.theme.light = '#ffff'
+    // this.$vuetify.theme.light = "#ffff";
     Swal.fire(
-      "¿Que pasa si..?",
-      "¿Quieres representar vacio 'λ' (Lambda)? .. Puedes escribir '?' para hacerlo. Recuerda que esto pueda ser un palabra valida para el automata.",
+      this.$i18n.tc('alerts.whatif', 1),
+      this.$i18n.tc('alerts.whatif', 0),
       "question"
     );
   },
@@ -166,9 +191,9 @@ export default {
     },
     validar_entrada() {
       return (
-        this.rules.stringEmtpy[0](this.input) &&
-        this.rules.expresionValida[0](this.input) &&
-        !this.rules.tabulaciones[0](this.input)
+        this.rules.stringEmtpy[0](this.textInput) &&
+        this.rules.expresionValida[0](this.textInput) &&
+        !this.rules.tabulaciones[0](this.textInput)
       );
     },
   },
@@ -182,16 +207,16 @@ export default {
       return new Promise((resolve) => setTimeout(resolve, ms));
     },
     routes(nodo, input) {
-      this.array_recorrido.push(nodo.id);
+      this.routesArray.push(nodo.id);
 
       var edges = this.network.edges.filter((edge) => {
         return edge.from == nodo.id;
       });
 
-      if (edges.length > 0 && input <= this.input.length) {
+      if (edges.length > 0 && input <= this.textInput.length) {
         //
         for (let edge of edges) {
-          if (this.input[input] == edge.label) {
+          if (this.textInput[input] == edge.label) {
             this.routes(this.network.nodes[edge.to], input + 1);
           }
         }
@@ -199,8 +224,8 @@ export default {
     },
     beggin() {
       Swal.fire({
-        title: "Atención!",
-        html: "No podra cambiar los valores. EL recorrido está por comenzar.",
+        title: this.$i18n.tc('alerts.start', 0),
+        html: this.$i18n.tc('alerts.start', 1),
         timer: 2700,
         timerProgressBar: true,
         didOpen: () => {
@@ -213,8 +238,8 @@ export default {
       });
     },
     validateRoutes() {
-      if (this.rules.stringEmtpy[0](this.input)) {
-        if (this.rules.expresionValida[0](this.input)) {
+      if (this.rules.stringEmtpy[0](this.textInput)) {
+        if (this.rules.expresionValida[0](this.textInput)) {
           this.beggin();
         } else {
           Swal.fire({
@@ -251,28 +276,28 @@ export default {
         animation: true,
       };
 
-      let focus = this.array_recorrido;
+      let focus = this.routesArray;
       console.log(focus);
       for (let index = 0; index < focus.length; index++) {
         await this.sleep(this.speed);
         this.$refs.network.focus(focus[index], options);
       }
 
-      if (this.rules.expresionValida[0](this.input)) {
+      if (this.rules.expresionValida[0](this.textInput)) {
         Swal.fire("Palabra valida para el automata!", "", "success");
       } else {
         Swal.fire("Palabra invalida para el automata!", "", "warning").then(
           (res) => {
             console.log(res);
             if (res.isConfirmed == true || res.isDismissed == true) {
-              if (focus.length - 1 != this.input.length) {
-                if (this.input != "?") {
+              if (focus.length - 1 != this.textInput.length) {
+                if (this.textInput != "?") {
                   Swal.fire({
                     icon: "error",
                     title: "Atención!!",
                     text:
                       "No se encontro un camino '" +
-                      this.input[focus.length - 1] +
+                      this.textInput[focus.length - 1] +
                       "' para avanzar a otro nodo.",
                   });
                 }
@@ -283,7 +308,7 @@ export default {
       }
 
       this.disabled = false;
-      this.array_recorrido = [];
+      this.routesArray = [];
     },
   },
 };

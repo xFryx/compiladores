@@ -16,6 +16,12 @@
           :value="lang"
           single-line
         ></v-select>
+        
+      </v-col>
+      <v-col cols="1">
+         <v-btn icon class="ml-n3">
+          <v-icon >mdi-information-outline</v-icon>
+        </v-btn>
       </v-col>
     </v-toolbar>
    

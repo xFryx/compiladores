@@ -4,7 +4,7 @@
     <v-container fluid class="">
       <v-row>
         <v-col cols="12" sm="6">
-          <label for="textoEntrada">{{ $tc('screen.labels', 0)}}</label>
+          <label for="textoEntrada">{{ $tc("screen.labels", 0) }}</label>
           <v-text-field
             name="textoEntrada"
             id="textoEntrada"
@@ -17,7 +17,7 @@
           </v-text-field>
         </v-col>
         <v-col cols="12" sm="6">
-          <label for="expresionRegular">{{ $tc('screen.labels', 1)}}</label>
+          <label for="expresionRegular">{{ $tc("screen.labels", 1) }}</label>
           <v-text-field
             name="expresionRegular"
             id="expresionRegular"
@@ -43,7 +43,7 @@
         </v-col>
         <v-col cols="12" sm="6">
           <v-btn
-            :disabled="disabled"
+            v-if="show"
             block
             color="blue darken-4"
             elevation="0"
@@ -51,7 +51,18 @@
             href="#network"
             @click="validateRoutes()"
           >
-            {{$t('screen.botton')}}
+            {{ $tc("screen.botton", 1) }}
+          </v-btn>
+           <v-btn
+            v-else
+            block
+            color="red darken-4"
+            elevation="0"
+            dark
+            href="#network"
+            @click="show = true"
+          >
+            {{ $tc("screen.botton", 0) }}
           </v-btn>
         </v-col>
       </v-row>
@@ -109,7 +120,6 @@
 </template>
 
 <script>
-
 import Header from "./components/Header.vue";
 import { Network } from "vue-visjs";
 const Swal = require("sweetalert2");
@@ -120,6 +130,9 @@ export default {
     "app-network": Network,
   },
   data: () => ({
+
+    //Cancel Routes
+    show: true,
     //Frontend
     disabled: false,
     tickLabels: ["x1", "x2", "x3", "x4", "x5"],
@@ -178,15 +191,11 @@ export default {
   }),
   created() {
     // this.$vuetify.theme.light = "#ffff";
-    Swal.fire(
-      this.$i18n.tc('alerts.whatif', 1),
-      this.$i18n.tc('alerts.whatif', 0),
-      "question"
-    );
+    this.showInfoAboutEmpty();
   },
   computed: {
     speed() {
-      let velocidad = 2000 / this.velocidad;
+      let velocidad = 2000 / (this.velocidad);
       return velocidad;
     },
     validar_entrada() {
@@ -202,7 +211,13 @@ export default {
       if (this.networkEvents.length > 500) this.networkEvents = "";
       this.networkEvents += `${eventName}, `;
     },
-
+    showInfoAboutEmpty(){
+       Swal.fire(
+      this.$i18n.tc("alerts.whatif", 1),
+      this.$i18n.tc("alerts.whatif", 0),
+      "info"
+    );
+    },
     sleep(ms) {
       return new Promise((resolve) => setTimeout(resolve, ms));
     },
@@ -222,17 +237,18 @@ export default {
         }
       }
     },
-    beggin() {
+    startRoute() {    
       Swal.fire({
-        title: this.$i18n.tc('alerts.start', 0),
-        html: this.$i18n.tc('alerts.start', 1),
+        title: this.$i18n.tc("alerts.start", 1),
+        html: this.$i18n.tc("alerts.start", 0),
         timer: 2700,
         timerProgressBar: true,
         didOpen: () => {
           Swal.showLoading();
         },
         willClose: () => {
-          clearInterval(2000);
+          clearInterval(700);
+          this.show = false
           this.set_focus(this.focus);
         },
       });
@@ -240,28 +256,30 @@ export default {
     validateRoutes() {
       if (this.rules.stringEmtpy[0](this.textInput)) {
         if (this.rules.expresionValida[0](this.textInput)) {
-          this.beggin();
+          this.startRoute();
         } else {
           Swal.fire({
             icon: "warning",
-            title: "Atención!!",
-            text:
-              "La palabra ingresada no cumple con la expresión regular. Puede que el recorrido no llegue a un estado de aceptación o ni siquiera encuentre un camino hacía él.",
+            title: this.$i18n.tc("alerts.validateRoutes.form", 1),
+            text: this.$i18n.tc("alerts.validateRoutes.form", 0),
             showCloseButton: true,
             showCancelButton: true,
             focusConfirm: false,
-            confirmButtonText: "Iniciar recorrido",
-            cancelButtonText: "Cambiar Texto",
+            confirmButtonText: this.$i18n.tc(
+              "alerts.validateRoutes.bottoms",
+              1
+            ),
+            cancelButtonText: this.$i18n.tc("alerts.validateRoutes.bottoms", 0),
             confirmButtonColor: "#3085d6",
             cancelButtonColor: "#d33",
           }).then((res) => {
             if (res.isConfirmed) {
-              this.beggin();
+              this.startRoute();
             }
           });
         }
       } else {
-        Swal.fire("Sin texto no hay recorrido!", "", "warning");
+        Swal.fire(this.$i18n.t("alerts.whithoutText"), "", "warning");
       }
     },
     async set_focus() {
@@ -278,35 +296,45 @@ export default {
 
       let focus = this.routesArray;
       console.log(focus);
-      for (let index = 0; index < focus.length; index++) {
-        await this.sleep(this.speed);
-        this.$refs.network.focus(focus[index], options);
+      if(this.textInput[0] == 'b' || this.textInput[0] == 'a' || this.textInput[0] == '?'){
+        for (let index = 0; index < focus.length; index++) {
+          if(this.show == false){
+              await this.sleep(this.speed);
+            this.$refs.network.focus(focus[index], options);
+          }
+          else{
+            Swal.fire(this.$i18n.tc("alerts.stop", 1), this.$i18n.tc("alerts.stop", 0), "info");
+            break;
+          }        
+        }
       }
-
-      if (this.rules.expresionValida[0](this.textInput)) {
-        Swal.fire("Palabra valida para el automata!", "", "success");
-      } else {
-        Swal.fire("Palabra invalida para el automata!", "", "warning").then(
-          (res) => {
-            console.log(res);
-            if (res.isConfirmed == true || res.isDismissed == true) {
-              if (focus.length - 1 != this.textInput.length) {
-                if (this.textInput != "?") {
-                  Swal.fire({
-                    icon: "error",
-                    title: "Atención!!",
-                    text:
-                      "No se encontro un camino '" +
-                      this.textInput[focus.length - 1] +
-                      "' para avanzar a otro nodo.",
-                  });
+      if(this.show == false){
+          setTimeout(() => {
+        if (this.rules.expresionValida[0](this.textInput)) {
+          Swal.fire(this.$i18n.tc("alerts.valideWord", 1), "", "success");
+        } else {
+          Swal.fire(this.$i18n.tc("alerts.valideWord", 0), "", "error").then(
+            (res) => {
+              console.log(res);
+              if (res.isConfirmed == true || res.isDismissed == true) {
+                if (focus.length - 1 != this.textInput.length) {
+                  if (this.textInput != "?") {
+                    Swal.fire({
+                      icon: "error",
+                      title: this.$i18n.tc("alerts.notFoundRoute", 1),
+                      text: this.$i18n.tc("alerts.notFoundRoute", 0) +  this.textInput[focus.length - 1] + "'"                     
+                    });
+                  }
                 }
               }
             }
-          }
-        );
+          );
+        }
+      }, 1500);
       }
+    
 
+      this.show = true;
       this.disabled = false;
       this.routesArray = [];
     },

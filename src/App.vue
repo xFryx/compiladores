@@ -9,6 +9,9 @@
       max="15"
       label="Indica la velocidad"
     ></v-slider>
+    <pre>
+      
+    </pre>
     <network
       class="network"
       ref="network"
@@ -70,26 +73,35 @@
 
 <script>
 import { Network } from 'vue-visjs';
+//import { filter } from 'vue/types/umd';
 
 export default {
   data: () => ({
     networkEvents: '',
     focus: 1,
     velocidad: 1,
+    recorridos: [],
     network: {
       nodes: [
-        { id: 1, label: 'Node 1', color: "red" },
-        { id: 2, label: 'Node 2' },
-        { id: 3, label: 'Node 3' },
-        { id: 4, label: 'Node 4' },
-        { id: 5, label: 'Node 5' },
+        { id: 0, label: 'q0', color: "green" },
+        { id: 1, label: 'q1', color: 'red' },
+        { id: 2, label: 'q2' },
+        { id: 3, label: 'q3' },
+        { id: 4, label: 'q4', color:"red" },
+        { id: 5, label: 'q5', color:"red" },
       ],
       edges: [
-         { id: 1, from: 1, to: 3, label: 'fry', title: "fry", color:"red" },
-          { id: 2, from: 1, to: 2, label: 'fry', title: "fry", color:"red"  },
-          { id: 3, from: 2, to: 4, label: 'fry', title: "fry", color:"red"  },
-          { id: 4, from: 2, to: 5, label: 'fry', title: "fry", color:"red"  },
-          { id: 5, from: 3, to: 3, label: 'fry', title: "fry", color:"red"  },
+         { id: 1, from: 0, to: 1, label: 'λ', title: "λ", arrows: {to:true} },
+         { id: 2, from: 1, to: 4, label: 'b', title: "b", arrows: {to:true} },
+         { id: 3, from: 1, to: 2, label: 'a', title: "a", arrows: {to:true}},
+         { id: 4, from: 2, to: 3, label: 'a', title: "a", arrows: {to:true}},
+         { id: 5, from: 3, to: 4, label: 'b', title: "b", arrows: {to:true}},
+         { id: 6, from: 3, to: 5, label: 'a', title: "a", arrows: {to:true}},
+         { id: 7, from: 4, to: 2, label: 'a', title: "a", arrows: {to:true}},
+         { id: 8, from: 4, to: 4, label: 'b', title: "b", arrows: {to:true}},
+         { id: 9, from: 5, to: 2, label: 'a', title: "a", arrows: {to:true}},
+         { id: 10, from: 5, to: 4, label: 'b', title: "b", arrows: {to:true}},
+         
       ],
       options: {
         nodes: {
@@ -107,6 +119,9 @@ export default {
      let velocidad = this.velocidad * 1000
       return velocidad
     }
+  },
+  created(){
+    this.recorrer_nodos()
   },
   methods: {
     networkEvent(eventName) {
@@ -129,22 +144,33 @@ export default {
     },
     resetNetwork() {
       this.network = {
-        nodes: [
-          { id: 1, label: 'Node 1' },
-          { id: 2, label: 'Node 2' },
-          { id: 3, label: 'Node 3' },
-          { id: 4, label: 'Node 4' },
-          { id: 5, label: 'Node 5' },
-        ],
-        edges: [
-          { id: 1, from: 1, to: 3, label: 'fry', title: "fry", color:"red" },
-          { id: 2, from: 1, to: 2, label: 'fry', title: "fry", color:"red"  },
-          { id: 3, from: 2, to: 4, label: 'fry', title: "fry", color:"red"  },
-          { id: 4, from: 2, to: 5, label: 'fry', title: "fry", color:"red"  },
-          { id: 5, from: 3, to: 3, label: 'fry', title: "fry", color:"red"  },
-        ],
-        options: {},
-      };
+      nodes: [
+        { id: 0, label: 'q0', color: "green" },
+        { id: 1, label: 'q1', color: 'red' },
+        { id: 2, label: 'q2' },
+        { id: 3, label: 'q3' },
+        { id: 4, label: 'q4', color:"red" },
+        { id: 5, label: 'q5', color:"red" },
+      ],
+      edges: [
+         { id: 1, from: 0, to: 1, label: 'λ', title: "λ", arrows: {to:true} },
+         { id: 2, from: 1, to: 4, label: 'b', title: "b", arrows: {to:true} },
+         { id: 3, from: 1, to: 2, label: 'a', title: "a", arrows: {to:true}},
+         { id: 4, from: 2, to: 3, label: 'a', title: "a", arrows: {to:true}},
+         { id: 5, from: 3, to: 4, label: 'b', title: "b", arrows: {to:true}},
+         { id: 6, from: 3, to: 5, label: 'a', title: "a", arrows: {to:true}},
+         { id: 7, from: 4, to: 2, label: 'a', title: "a", arrows: {to:true}},
+         { id: 8, from: 4, to: 4, label: 'b', title: "b", arrows: {to:true}},
+         { id: 9, from: 5, to: 2, label: 'a', title: "a", arrows: {to:true}},
+         { id: 10,from: 5, to: 4, label: 'b', title: "b", arrows: {to:true}},
+         
+      ],
+      options: {
+        nodes: {
+          shape: 'circle',
+        },
+      },
+    };
     },
     removeNode() {
       this.network.nodes.splice(0, 1);
@@ -155,6 +181,61 @@ export default {
     sleep(ms) {
       return new Promise(resolve => setTimeout(resolve, ms));
     },
+    /*
+    r(nodo){
+      const nodoid = nodo.id;
+      const nodotitle = nodo.title;
+
+      const edges = network.edges.filter((edge) => {
+          return edge.from == nodoid;
+      });
+
+      if(edges.length>0){
+         edges.forEach(edge => {
+            console.log(nodotitle);
+            var nodoto = network.nodes.filter((nodo) =>{
+                return nodo.id == edge.to;
+            })
+           
+            nodoto.length > 0 ? r(network.nodes[nodoto[0]]) : console.log('algo');
+        });
+      }
+      return 
+    },
+    */
+    recorrer_nodos(){
+      let recorridos = []
+        for (let index = 0; index < this.network.nodes.length; index++) {
+          recorridos.push({
+           nodo: this.network.nodes[index].id,
+           caminos: []
+          })
+          for (let index2 = 0; index2 < this.network.edges.length; index2++) {
+
+              if(this.network.nodes[index].id==this.network.edges[index2].from){
+                recorridos[recorridos.length-1].caminos.push(this.network.edges[index2].to)
+              }
+          }
+          
+        }
+        console.log(recorridos)
+        this.recorridos = [...recorridos]
+        
+        this.recorrer_caminos(0,0)
+
+    },
+    async recorrer_caminos(nodo,sgt){
+
+        
+
+        for (let index = sgt; index < this.recorridos[nodo].caminos.length; sgt++) {
+          
+          let nodo_return = await this.recorrer_caminos(this.recorrer_caminos[nodo].caminos[index],index)
+          console.log(nodo_return)
+        }
+     
+    },
+
     async set_focus(){
       //console.log(this.$refs.network.getOptionsFromConfigurator())
       //this.$refs.network.focus(1)
@@ -164,6 +245,8 @@ export default {
         locked: true,
         animation: true
       }
+    
+
       let focus = [5,2,4,2,1,3]
       for (let index = 0; index < focus.length; index++) {
            await this.sleep(this.speed)

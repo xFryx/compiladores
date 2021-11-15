@@ -7,7 +7,7 @@ import Vue from 'vue'
 Vue.use(VueI18n)
 
 export default new VueI18n({
-    locale: localStorage.getItem('lang') || 'es',
+    locale:localStorage.getItem('lang') ||  'es',
     messages: {
         en: en,
         es: es,

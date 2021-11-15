@@ -1,7 +1,9 @@
 <template>
-  <v-app>
+  <v-app class="">
+
     <app-header></app-header>
-    <v-container fluid class="">
+    <v-main>
+         <v-container fluid class="">
       <v-row>
         <v-col cols="12" sm="6">
           <label for="textoEntrada">{{ $tc("screen.labels", 0) }}</label>
@@ -116,6 +118,9 @@
       >
       </app-network>
     </v-container>
+    
+    </v-main>
+ 
   </v-app>
 </template>
 

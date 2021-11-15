@@ -35,7 +35,7 @@ export default {
     const lang = localStorage.getItem("lang") || "es";
     return {
       lang: lang,
-      items: ['en', 'es' ,'ar'],
+      items: ['en', 'es' ,'fr'],
     };
   },
   methods: {

@@ -1,0 +1,22 @@
+{
+    "screen": {
+        "toolbarTitle": "Automates finis",
+        "labels": "Texte de saisie | Expression régulière | Animation ",
+        "placehoder": "Entrez du texte",
+        "botton": "Commencer la visite | Arrêter la visite",
+        "RExp": "^((aaa)*(aab)*b*)*$"
+    } ,
+    "alerts": {
+        "whatif": "Et qu'est-ce qui se passerait si..? | Voulez-vous représenter un « λ » vide (Lambda) ? Pouvez-vous écrire « ? » pour le faire, rappelez-vous que cela peut être un mot valable pour les automates.",
+        "start" :"Attention!! | Vous ne pourrez pas modifier les valeurs. Le voyage est sur le point de commencer.",
+        "stop" : "Attention!! | Animation arrêtée.",
+        "validateRoutes": {
+            "form": "Attention!! | Le mot saisi ne correspond pas à l'expression régulière. Le voyage peut ne pas atteindre un état d'acceptation ou même trouver un moyen d'y parvenir.",
+            "bottoms": "Iniciar recorrido | Cambiar texto"
+        },
+        "valideWord": "Palabra valida para el automata! | Palabra invalida para el automata!",
+        "whithoutText": "Sans texte il n'y a pas de visite !",
+        "notFoundRoute": "Attention!! | Bord introuvable: '"
+       
+    }      
+}

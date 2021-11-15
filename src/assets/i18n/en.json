@@ -1,10 +1,22 @@
 {
     "screen": {
-        "toolbarTitle": "Automata Finito",
-        "labels": "Texto de entrada | Expresión Regular | Animación  ",
-        "placehoder": "Ingresar texto",
-        "botton": "Iniciar Recorrido",
+        "toolbarTitle": "Finite Automata",
+        "labels": "Input text | Regular Expression | Animation ",
+        "placehoder": "Enter text",
+        "botton": "Start tour | Stop tour",
         "RExp": "^((aaa)*(aab)*b*)*$"
-    }   
-      
+    } ,
+    "alerts": {
+        "whatif": "What if..? | Do you want to represent empty '?' (Lambda)? Can you write '?' to do it, Remember that this may be a valid word for the automata. ",
+        "start" :"Attention!! | You will not be able to change the values. THE journey is about to begin.",
+        "stop" : "Attention!! | Animation stopped.",
+        "validateRoutes": {
+            "form": "Attention!! | The word entered does not match the regular expression. The journey may not reach a state of acceptance or even find a way to it. ",
+            "bottoms": "Start tour | Change text"
+        },
+        "valideWord": "Valid word for the automata! | Invalid word for the automata!",
+        "whithoutText": "Without text there is no tour!",
+        "notFoundRoute": "Attention!! | Edge not found: '"
+       
+    }      
 }

@@ -1,6 +1,6 @@
 import en from  './assets/i18n/en.json'
 import es from  './assets/i18n/es.json'
-import ar from  './assets/i18n/ar.json'
+import fr from  './assets/i18n/fr.json'
 import VueI18n from 'vue-i18n'
 import Vue from 'vue'
 
@@ -11,6 +11,6 @@ export default new VueI18n({
     messages: {
         en: en,
         es: es,
-        ar: ar
+        fr: fr
     }
 })
